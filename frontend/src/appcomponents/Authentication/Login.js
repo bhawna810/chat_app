@@ -1,7 +1,7 @@
 import React, { useState }  from 'react'
-import { Box } from "@chakra-ui/react"
+// import { Box } from "@chakra-ui/react"
 import { Input } from "@chakra-ui/react"
-import { Field}  from "@chakra-ui/react"
+// import { Field}  from "@chakra-ui/react"
 import { Button } from "@chakra-ui/react";
 import { IoMdEye , IoIosEyeOff } from "react-icons/io";
 
@@ -27,12 +27,6 @@ const Login = () => {
 
   return (
     <div>
-       
-       <Box p="4" borderWidth="1px" borderColor="border.disabled" background="white" color="black" width="50%" borderRadius="md" >
-         TALK-A-TIVE
-       </Box>
-     
-        <Box p="4" borderWidth="1px" borderColor="border.disabled" background="white" color="black" width="50%" borderRadius="md" >
             <p>Email Address</p>
             <Input placeholder="Enter your email" borderColor="border.disabled"/>
              <p>Password</p>
@@ -43,9 +37,6 @@ const Login = () => {
               
              <Button colorScheme="teal">Login</Button>
              <Button colorScheme="red" >Login as a guest User</Button>
-       </Box>
-
-
     </div>
   )
 }
