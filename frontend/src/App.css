@@ -1,0 +1,15 @@
+.toggleshowcolorbutton{
+    background-color : blue;
+    width: 40%;
+    border-radius: 20px;
+    margin-left: 40px;
+    margin-right: 20px;
+}
+
+
+.togglehidecolorbutton{
+    width: 40%;
+    border-radius: 20px;
+    margin-left: 40px;
+    margin-right: 20px;
+}
