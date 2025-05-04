@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const saltRounds = 10; 
 
-
 const userSchema = new mongoose.Schema(
     {
         email : {
@@ -19,6 +18,9 @@ const userSchema = new mongoose.Schema(
         name : {
             type : String,
             required : true,
+        },
+        image : {
+          type: String
         }
     },
     { timestamps: true }

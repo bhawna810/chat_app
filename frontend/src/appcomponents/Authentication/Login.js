@@ -5,7 +5,7 @@ import { Input } from "@chakra-ui/react"
 import { Button } from "@chakra-ui/react";
 import { IoMdEye , IoIosEyeOff } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-
+import {ChatContext} from  "../../Context/ChatProvider"
 
 const Login = () => {
 
@@ -14,6 +14,8 @@ const Login = () => {
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const {user , setUser} = ChatContext();
 
   function setHidePasswordValfunctCall(){
 
@@ -46,7 +48,10 @@ const Login = () => {
       }
     })
     .then(response => response.json())
-    .then(data => console.log("Login Response:", data))
+    .then(data => {
+      console.log("Login Response:", data);
+      setUser({ email: data.user.email, password: data.user.password , name: data.user.name, image : data.user.image , token : data.token })
+    })
     .catch(error => console.error("Error:", error));
 
     navigate("/Chatpage");

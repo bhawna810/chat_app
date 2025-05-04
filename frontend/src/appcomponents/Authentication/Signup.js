@@ -3,6 +3,7 @@ import { Input , Button, VStack , Alert } from "@chakra-ui/react";
 import { IoMdEye , IoIosEyeOff } from "react-icons/io";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router-dom";
+import {ChatContext} from  "../../Context/ChatProvider"
 // import Chatpage from "../../pages/Chatpage";
 
 const Signup = () => {
@@ -14,19 +15,21 @@ const Signup = () => {
   const [ boolEmailAtSubmit , setboolEmailAtSubmit] = useState(false);
   const [ boolPasswordAtSubmit , setboolPasswordAtSubmit] = useState(false);
   const [ showErrorAlert , setShowErrorAlert] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const matchpasswordRef = useRef(null);
   const nameRef = useRef(null);
-  const imageRef = useRef(null);
+  // const imageRef = useRef(null);
 
   const [ namePara , setNamePara] = useState('');
   const [ firstPara , setFirstPara ] = useState('');
   const [ secondPara , setSecondPara ] = useState('');
   const [ thirdPara , setThirdPara ] = useState('');
+
+  const {user , setUser} = ChatContext();
   
 
   function setHidePasswordValfunctCall(){
@@ -80,13 +83,19 @@ const Signup = () => {
         return;
     }
 
+    // setUser(emailVal)
+    
     fetch(' http://localhost:5001/api/user' , {
       method : 'POST', 
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal }),
+      // body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal }),
+       body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal, image : '' }),
     })
    .then(response => response.json())
-   .then(data => console.log("Response:", data))
+   .then(data => {
+      console.log("Response:", data);
+      setUser({ email: emailVal, password: passwordVal , name: nameVal, image : '', token :  data.token})
+    })
    .catch(error => console.error("Error:", error));
 
    debounce(() => {
@@ -128,6 +137,10 @@ const Signup = () => {
   }, 2000)
 
   const checkFirstPasswordfunc = debounce((val) => {
+
+    // console.log("val", val);
+    // console.log("passwordRef.current.value", passwordRef);
+    // console.log("matchpasswordRef.current.value", matchpasswordRef);
 
     const passwordVal = (val === 'first' ? passwordRef.current.value : matchpasswordRef.current.value);
 
@@ -187,7 +200,7 @@ const Signup = () => {
                 </Alert.Root> 
               </div>
                  : null
-            }
+      }
       </div>
 
            
