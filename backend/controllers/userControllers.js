@@ -27,36 +27,11 @@ const userValidate = async(req , res ) => {
 
          const userAllowed = await bcrypt.compare(password, userPresent.password);
          if(userAllowed){
-
-                // const tokenvar = await generateToken(email , password);
-
-                // console.log("tokenvar", tokenvar);
-
-                // const now = new Date();
-
-                // console.log("now", now);
-
-                // const expriesAt = new Date(now.getTime() + 60 * 60 * 1000);
-                // //  const expriesAt = new Date(now.getTime() + 2 * 60 * 1000);
-
-                //  console.log("expriesAt", expriesAt);
-
-                // if(tokenvar){
-                    
-                //    let newToken = await new BlacklistedToken({
-                //        token : tokenvar,
-                //        expiresAt : expriesAt
-                //    })
-                //    .save()
-
-                //    console.log("newToken",newToken);
-
-                   return res.status(200).json({
-                     user :  userPresent,
-                    //  token : tokenvar,
-                     token : generateToken(email , password),
-                  })
-                // }
+            return res.status(200).json({
+                 user :  userPresent,
+                 token : generateToken(email , password),
+            })
+                
          }
          else{
             return res.status(200).send("invalid emailId or Password ");
@@ -108,41 +83,13 @@ const userRegister = async(req, res) => {
 
             
             if(newUser){
-                // console.log(" inside return newuser vallue ")
-            //    return res.status(201)
-                // const tokenvar = await generateToken(email , password);
 
-                // console.log("tokenvar", tokenvar);
-
-                // const now = new Date();
-
-                // console.log("now", now);
-
-                // const expriesAt = new Date(now.getTime() + 60 * 60 * 1000);
-                // //  const expriesAt = new Date(now.getTime() + 2 * 60 * 1000);
-
-                //  console.log("expriesAt", expriesAt);
-
-                // if(tokenvar){
-                    
-                //    let newToken = await new BlacklistedToken({
-                //        token : tokenvar,
-                //        expiresAt : expriesAt
-                //    })
-                //    .save()
-
-                //    console.log("newToken",newToken);
-                   
-                    res.status(201).json({
-                //   _id: user._id,
-                  name: name,
-                  email: email,
-                  image: image,
-                  token : generateToken(email , password)
-                  // token : tokenvar,
-
+                res.status(201).json({
+                    name: name,
+                    email: email,
+                    image: image,
+                    token : generateToken(email , password)
                 });
-                // }
             }
             
         }
@@ -168,12 +115,6 @@ const uploadandSaveImage = async (req, res) => {
     if (!req.file || !req.body.email) {
       return res.status(400).json({ error: 'Image or email missing' });
     }
-
-    // const tokenpresent = await BlacklistedToken.findOne({token : token}); 
-
-    // if(!tokenpresent){
-    //    return res.status(400).json({ error: 'Invalid Token' });
-    // }
 
     const stream = cloudinary.uploader.upload_stream(
       { folder: 'chat_app_users' },
@@ -218,12 +159,6 @@ const removeImage = async (req, res) => {
     }
 
     try{
-
-      // const tokenpresent = await BlacklistedToken.findOne({token : token}); 
-
-      // if(!tokenpresent){
-      //    return res.status(400).json({ error: 'Invalid Token' });
-      // }
 
         const userPresent = await User.findOneAndUpdate(
           { email: email }, // or req.user.email if you're using auth
@@ -271,5 +206,17 @@ const logout = async (req, res) => {
       
 }
 
-module.exports =  {userRegister ,userValidate , uploadandSaveImage , removeImage , logout }
-// module.exports =  {userRegister ,userValidate }
+
+const searchUser = async (req, res) => {
+
+  console.log(": hello ---------------");
+  
+   try {
+    const users = await User.find({}).select('-password'); // exclude password
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+
+}
+module.exports =  {userRegister ,userValidate , uploadandSaveImage , removeImage , logout , searchUser}

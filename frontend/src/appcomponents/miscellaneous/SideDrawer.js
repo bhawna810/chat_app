@@ -8,12 +8,16 @@ import {ChatContext} from  "../../Context/ChatProvider"
 import { Alert, Stack } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router-dom";
+import SearchedUser from "./SearchedUser";
 
 const SideDrawer = () => {
 
     const [ boolHideModal , setBoolHideModal] = useState(false);
-    const {user , setUser} = ChatContext();
+    const [ seachUserbar, setSeachUserbar] = useState(false);
+    const userRef = useRef(null);
+    const {user , setUser,allUser, setAllUser} = ChatContext();
     const navigate = useNavigate();
+    const [ filteredUsers , setFilteredUsers ] = useState([]);
    
     function openModal(){
       setBoolHideModal(true);
@@ -38,17 +42,107 @@ const SideDrawer = () => {
         })
     }
 
-    // console.log('inside SideDrawer function again', user);
+    async function userSearchFunc(){
+       setSeachUserbar(true);
+       setFilteredUsers([]);
+      console.log("user.token", user.token);
 
+      await fetch('http://localhost:5001/api/user/searchUser',{
+          method : 'GET',
+          headers : {
+              "Authorization": `Bearer ${user.token}`
+          },
+      })
+      .then(res=>res.json())
+      .then(data => {
+        console.log(data);
+        let allData = [] , boolVal;
+        data?.map((ele,key) => {
+          if(ele.email === user.email ){
+
+          }
+          else{
+             console.log("ele", ele);
+            console.log("allUser", allUser);
+            allData.push(ele);
+          }
+        })
+        allData?.map((ele)=> {
+           boolVal = false;
+          allUser?.map((res)=>{
+            if(ele.email === res.email){
+                boolVal = true;
+                return;
+            }
+          })
+          if(!boolVal){
+             setAllUser(prevArray => [...prevArray, ele])
+          }
+        })
+
+      })
+      .catch(err => console.log(err));
+    }
+
+    function crossModelSearch(){
+       setSeachUserbar(false);
+       setFilteredUsers([]);
+    }
+
+    async function searchUserFunction(){
+      
+       const searchInputVal = userRef.current.value;
+
+      //  setTimeout(() => {
+      //   ( function(){
+            let filteredUsersArray = await Promise.resolve(
+                  allUser.filter(user =>
+                     user.name.toLowerCase().includes(searchInputVal.toLowerCase())
+                  )
+            );
+
+             console.log("filteredUsersArray inside", filteredUsersArray);
+
+            setFilteredUsers([...filteredUsersArray])
+            console.log("filteredUsers ", filteredUsers);
+          //  }
+        // )()
+      //  },5000)
+
+       console.log("allUser", allUser);
+      //  console.log("filteredUsers outside", filteredUsers);
+
+      //  console.log("searchInputVal", searchInputVal);
+    }
+
+    console.log("filteredUsers outside the function ", filteredUsers);
   return (
     <div style={{position: 'relative'}}>
       {
           boolHideModal ?  <ModalImage setBoolHideModal={setBoolHideModal} /> : null
       }
+      {
+          seachUserbar ? 
+            <Box bg="white" h="100%" p="4" color="white" style={{position: 'absolute', width: '20rem', zIndex: '100', 
+               boxShadow: 'rgba(0, 0, 0, 0.25) 10px 10px 20px 0px', borderRadius: '5px', height: '30rem'}}>
+                 <Input placeholder='Seach Nmae' type="text" 
+                 style={{color: 'black', display : 'inline', width: '14rem', marginRight: '3rem'}} 
+                 onChange={searchUserFunction} ref={userRef}/>
+                 <RxCross2 style={{display : 'inline' , color: 'black'}} onClick={crossModelSearch} />
+                 { filteredUsers?.map((ele) => {
+                     return <SearchedUser key={ele.id} name={ele.name} obj={ele}/>
+                  })}
+            </Box>
+          : null
+      }
+      
       
       <Box bg="white" w="100%" p="4" color="white">
-        <FaSearch  style={{color : 'black' , display : 'inline'}}/>
-        <p style={{color : 'black' , display : 'inline'}}>Search User</p>
+        <div onClick={userSearchFunc} style={{display : 'inline'}}>
+            <FaSearch  style={{color : 'black' , display : 'inline'}} />
+            <p style={{color : 'black' , display : 'inline'}} >Search User</p>
+        </div>
+       
         <p style={{color : 'black' , display : 'inline', position: 'absolute', right: '45rem'}}>Talk-A-Tive</p>
         <FaBell  style={{color : 'black' , display : 'inline' , position: 'absolute', right: '8rem'}}/>
         <Avatar.Root style={{position: 'absolute' ,right: '4rem', cursor : 'pointer'}} onClick={openModal} >

@@ -4,15 +4,15 @@ const ChatContextfirst = createContext();
 
 export const ChatProvider = ({children}) => {
 
-  const [user, setUser] = useState({});  
+  const [user, setUser] = useState({}); 
+  const [allUser , setAllUser] = useState([]);
+  const [currentUser , setCurrentUser] = useState();
   // const [profilePic , setProfilePic] = useState(false);
 
   return (
-    <div>
-      <ChatContextfirst.Provider value={{ user , setUser }}>
+      <ChatContextfirst.Provider value={{ user , setUser, allUser ,  setAllUser, currentUser , setCurrentUser}}>
         {children}
       </ChatContextfirst.Provider>
-    </div>
   )
 }
 
