@@ -7,6 +7,7 @@ export const ChatProvider = ({children}) => {
   const [user, setUser] = useState({}); 
   const [allUser , setAllUser] = useState([]);
   const [currentUser , setCurrentUser] = useState();
+  const [userchat , setUserChat] = useState([]);
   // const [profilePic , setProfilePic] = useState(false);
 
   return (

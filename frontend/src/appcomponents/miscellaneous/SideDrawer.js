@@ -34,7 +34,7 @@ const SideDrawer = () => {
         // .then(response => response.json())
         .then(res => {
           console.log(res);
-          setUser({ email: '', password: '' , name: '', image : '' , token : ''});
+          setUser({ email: '', password: '' , name: '', image : '' , token : '', id: ''});
           navigate('/');
         })
         .catch((error) => {
@@ -213,7 +213,7 @@ const ModalImage = ({setBoolHideModal}) => {
         .then(data =>{ 
           console.log("Response:", data);
           console.log("Response url :", data.result.url);
-          setUser({ email: user.email, password: user.password , name: user.name, image : data.result.url , token : user.token })
+          setUser({ email: user.email, password: user.password , name: user.name, image : data.result.url , token : user.token , id: user.id})
           setShowErrorAlert(true);
 
           debounce(() => {
@@ -253,7 +253,7 @@ const ModalImage = ({setBoolHideModal}) => {
              .then(res => res.json())
              .then(data =>{ 
                 console.log(data);
-                setUser({ email: user.email, password: user.password , name: user.name, image : '' ,  token : user.token });
+                setUser({ email: user.email, password: user.password , name: user.name, image : '' ,  token : user.token , id: user.id});
                 seturl('');
              })
              .catch(error => console.log(error));

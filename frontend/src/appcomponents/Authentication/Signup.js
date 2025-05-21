@@ -89,12 +89,12 @@ const Signup = () => {
       method : 'POST', 
       headers: { "Content-Type": "application/json" },
       // body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal }),
-       body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal, image : '' }),
+       body: JSON.stringify({ email: emailVal, password: passwordVal , name: nameVal, image : '' , isAdmin : false}),
     })
    .then(response => response.json())
    .then(data => {
       console.log("Response:", data);
-      setUser({ email: emailVal, password: passwordVal , name: nameVal, image : '', token :  data.token})
+      setUser({ email: emailVal, password: passwordVal , name: nameVal, image : '', token :  data.token, id: data._id})
     })
    .catch(error => console.error("Error:", error));
 

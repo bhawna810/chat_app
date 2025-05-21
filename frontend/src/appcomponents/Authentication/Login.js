@@ -50,7 +50,7 @@ const Login = () => {
     .then(response => response.json())
     .then(data => {
       console.log("Login Response:", data);
-      setUser({ email: data.user.email, password: data.user.password , name: data.user.name, image : data.user.image , token : data.token })
+      setUser({ email: data.user.email, password: data.user.password , name: data.user.name, image : data.user.image , token : data.token , id: data.user._id})
     })
     .catch(error => console.error("Error:", error));
 

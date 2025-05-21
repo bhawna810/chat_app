@@ -29,7 +29,7 @@ const userValidate = async(req , res ) => {
          if(userAllowed){
             return res.status(200).json({
                  user :  userPresent,
-                 token : generateToken(email , password),
+                 token : generateToken(email , password, userPresent.id),
             })
                 
          }
@@ -44,7 +44,7 @@ const userValidate = async(req , res ) => {
 const userRegister = async(req, res) => {
 
     // console.log(" hello ");
-    const {  email , password, name, image } = req.body;
+    const {  email , password, name, image, isAdmin } = req.body;
 
     console.log(" email " , email);
     console.log(" password " , password);
@@ -77,10 +77,10 @@ const userRegister = async(req, res) => {
                 email : email, 
                 password : password,
                 name : name,
-                image: image
+                image: image,
+                isAdmin : isAdmin
             })
             .save()
-
             
             if(newUser){
 
@@ -88,7 +88,8 @@ const userRegister = async(req, res) => {
                     name: name,
                     email: email,
                     image: image,
-                    token : generateToken(email , password)
+                    id: newUser.id,
+                    token : generateToken(email , password, newUser.id)
                 });
             }
             

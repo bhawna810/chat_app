@@ -14,5 +14,4 @@ router.route('/removeupload').post(verifyToken , removeImage);
 router.route('/logout').get(verifyToken , logout);
 router.route('/searchUser').get(verifyToken , searchUser);
 
-
 module.exports = router;
