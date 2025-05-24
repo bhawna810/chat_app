@@ -37,7 +37,7 @@ const Chatboxdisplay = () => {
     console.log("user.id inside useffecte ", user.id);
   }, [user]);
 
-  function sendMessage(){
+ async  function sendMessage(){
 
     const messageRef = messageInputRef.current.value;
 
@@ -50,16 +50,46 @@ const Chatboxdisplay = () => {
         receiverId : currentUser._id,
         message : messageRef,
     });
+
+    const response = await fetch('http://localhost:5001/api/chat/store', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chatName: `${currentUser.name}_${currentUser._id}`,
+                    // chatName : 'hello',
+                    isGroupChat : 'false',
+                    users : [user.id, currentUser._id],
+                    isGroupAdmin : user.id,
+               })
+           })
+          
+          
+           const data = await response.json();
+           console.log("chatModel stored:", data);
+
+   
+        if(data){
+         
+          console.log("messageInputRef.current.value,", messageRef);
+
+           await fetch('http://localhost:5001/api/message/store', {
+             method: 'POST',
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({
+               senderId: user.id,
+               receiverId: currentUser._id,
+               message: messageRef,
+               chatId : data._id
+             })
+          })
+           .then( res => console.log(res))
+           .catch(err => console.log(err));
+        }
   }
 
    socket.on("receive_message", async (message) => {
 
-       await fetch('http://localhost:5001/api/message/store', {
-          method : 'POST',
-          headers: { "Content-Type": "application/json" },
-          body : {  senderId : user.id, receiverId : currentUser._id, message :  messageInputRef.current.value,}
-       })
-       console.log(" message inside receved message", message)
+     console.log(" message inside receved message", message);   
     });
 
   return (
